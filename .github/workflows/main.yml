@@ -43,6 +43,7 @@ jobs:
         SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
 
   semgrep:
+    needs: Testing
     name: SATS Sempgrep
     runs-on: ubuntu-latest
     container:
