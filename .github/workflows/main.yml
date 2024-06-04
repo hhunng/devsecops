@@ -57,18 +57,18 @@ jobs:
     - name: full scan
       run: |
         semgrep \
-          --sarif --output report.sarif \
+          --json --output report.json \
           --metrics=off \
           --config="p/java"
     - name: save report as pipeline artifact
       # step 3
       uses: actions/upload-artifact@v3
       with:
-        name: report.json
+        name: report.sarif
         path: report.sarif
       if: ${{ always() }}
-      # step 4
 
+    # step 4
     - name: publish code scanning alerts
       uses: github/codeql-action/upload-sarif@v2
       with:
