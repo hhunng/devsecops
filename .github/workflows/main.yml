@@ -42,19 +42,6 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
 
-  semgrep:
-    needs: Testing
-    name: SATS Sempgrep
-    runs-on: ubuntu-latest
-    container:
-      image: semgrep/semgrep
-    if: (github.actor != 'dependabot[bot]')
-    steps:
-    - name: Code checkout
-      uses: actions/checkout@v4
-    - run: semgrep ci
-      # Run the "semgrep ci" command on the command line of the docker image.
-
   semgrep-full:
     runs-on: ubuntu-latest
     container:
@@ -71,7 +58,7 @@ jobs:
         semgrep \
           --sarif --output report.sarif \
           --metrics=off \
-          --config="p/default"
+          --config="p/java"
 
     - name: save report as pipeline artifact
       # step 3
