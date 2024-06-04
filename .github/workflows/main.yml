@@ -43,6 +43,7 @@ jobs:
         SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
 
   semgrep-full:
+    name: Semgrep Scan
     runs-on: ubuntu-latest
     container:
       image: returntocorp/semgrep
