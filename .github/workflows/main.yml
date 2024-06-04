@@ -56,10 +56,7 @@ jobs:
     # step 2
     - name: full scan
       run: |
-        semgrep \
-          --sarif --output report.sarif \
-          --metrics=off \
-          --config="p/java"
+        semgrep ci --json --output semgrep.json
     - name: List files
       run: |
         ls
