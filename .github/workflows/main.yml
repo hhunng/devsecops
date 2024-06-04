@@ -62,7 +62,7 @@ jobs:
           --config="p/java"
 
     - name: full scan json
-      run: semgrep scan --json-output=report.json
+      run: semgrep scan --lang java --json-output=report.json
     - name: save report as pipeline artifact
       # step 3
       uses: actions/upload-artifact@v3
