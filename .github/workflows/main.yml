@@ -51,10 +51,8 @@ jobs:
       image: zricethezav/gitleaks
     #  options: --entrypoint ""
     steps:
-    - name: Check
-      run: /usr/bin/docker ps -all
     - name: Code checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v3.1.0
 
     - name: Gitleak scan
       run: gitleaks detect --verbose --source .
@@ -68,8 +66,8 @@ jobs:
     steps:
     - name: Code checkout
       uses: actions/checkout@v4
-    # step 1
     - name: full scan
+      # step 1
       run: |
         semgrep \
           --sarif --output report.sarif \
