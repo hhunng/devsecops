@@ -48,6 +48,9 @@ jobs:
     name: Gitleaks Scan
     runs-on: ubuntu-latest
     steps:
+    - name: Code checkout
+      uses: actions/checkout@v4
+      
     - name: Run Gitleaks
       id: gitleaks
       uses: DariuszPorowski/github-action-gitleaks@v2
