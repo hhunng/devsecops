@@ -87,7 +87,7 @@ jobs:
     - name: save report as pipeline artifact
       uses: actions/upload-artifact@v3
       with:
-        name: semgrep.json
+        name: semgrep
         path: semgrep.json
       if: ${{ always() }}
 
@@ -105,7 +105,7 @@ jobs:
     - name: Download aritfact of Segrem
       uses: actions/download-artifact@v4
       with:
-        name: semgrep.json
-        
+        name: semgrep
+
     - name: Run script
       run: ls
