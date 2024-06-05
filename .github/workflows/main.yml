@@ -92,7 +92,7 @@ jobs:
       if: ${{ always() }}
 
   reports:
-    needs: [semgrep, gitleaks]
+    needs: [semgrep, gitleaks, Testing]
     name: Upload reports
     runs-on: ubuntu-latest
     container:
@@ -102,10 +102,11 @@ jobs:
     - name: Code checkout
       uses: actions/checkout@v4
 
+    - name: Run script
+      run: ls
+
     - name: Download aritfact of Segrem
       uses: actions/download-artifact@v4
       with:
         name: semgrep
 
-    - name: Run script
-      run: ls
