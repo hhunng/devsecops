@@ -12,6 +12,8 @@ jobs:
     steps:
     - name: Code checkout
       uses: actions/checkout@v4
+    - name: check current
+      run: pwd
     - name: Maven test
       run: mvn test
     - name: Checkstyle
@@ -49,6 +51,10 @@ jobs:
       image: zricethezav/gitleaks
       options: --entrypoint ""
     steps:
+    - name: Code checkout
+      uses: actions/checkout@v4
+    - name: check current
+      run: pwd
     - name: gitleak scan
       run: gitleaks detect --verbose --source .
 
@@ -59,6 +65,8 @@ jobs:
       image: returntocorp/semgrep
 
     steps:
+    - name: Code checkout
+      uses: actions/checkout@v4
     # step 1
     - name: full scan
       run: |
