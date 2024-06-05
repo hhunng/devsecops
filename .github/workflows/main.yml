@@ -59,12 +59,13 @@ jobs:
 
     - name: Upload Gitleaks JSON report to artifacts
       uses: actions/upload-artifact@v3
+      if: failure()
       with:
         name: gitleaks
         path: ${{ steps.gitleaks.outputs.report }}
 
 
-  semgrep-full:
+  semgrep:
     name: Semgrep Scan
     runs-on: ubuntu-latest
     container:
@@ -81,12 +82,25 @@ jobs:
           --config="p/java"
 
     - name: full scan json
-      run: semgrep scan --lang java --json-output=report.json
+      run: semgrep scan --lang java --json-output=semgrep.json
 
     - name: save report as pipeline artifact
       uses: actions/upload-artifact@v3
       with:
-        name: report.json
-        path: report.json
+        name: semgrep.json
+        path: semgrep.json
       if: ${{ always() }}
 
+  reports:
+    needs: [semgrep, gitleaks]
+    name: Upload reports
+    runs-on: ubuntu-latest
+    container:
+      image: python
+
+    steps:
+    - name: Code checkout
+      uses: actions/checkout@v4
+
+    - name: Run script
+      run: ls
