@@ -47,10 +47,11 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: zricethezav/gitleaks
+      options: --entrypoint ""
     steps:
     - name: gitleak scan
       run: gitleaks detect --verbose --source .
-    
+
   semgrep-full:
     name: Semgrep Scan
     runs-on: ubuntu-latest
@@ -75,4 +76,4 @@ jobs:
         name: report.json
         path: report.json
       if: ${{ always() }}
-  
+
