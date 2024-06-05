@@ -50,6 +50,10 @@ jobs:
       with:
         config: MyGitleaksConfigs/MyGitleaksConfig.toml
 
+    - name: check
+      id: check
+      run: ls
+      
     - name: save report as pipeline artifact
       # step 2
       uses: actions/upload-artifact@v3
