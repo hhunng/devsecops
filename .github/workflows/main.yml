@@ -44,18 +44,19 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
 
-  gitleaks:
-    name: Gitleaks Scan
-    runs-on: ubuntu-latest
-    container:
-      image: zricethezav/gitleaks
-    #  options: --entrypoint ""
-    steps:
-    - name: Code checkout
-      uses: actions/checkout@v4
+    - name: Run Gitleaks
+      id: gitleaks
+      uses: DariuszPorowski/github-action-gitleaks@v2
+      with:
+        config: MyGitleaksConfigs/MyGitleaksConfig.toml
 
-    - name: Gitleak scan
-      run: gitleaks detect --verbose --source .
+    - name: save report as pipeline artifact
+      # step 2
+      uses: actions/upload-artifact@v3
+      with:
+        name: MyGitleaksConfig.toml
+        path: MyGitleaksConfigs/MyGitleaksConfig.toml
+      if: ${{ always() }}
 
   semgrep-full:
     name: Semgrep Scan
