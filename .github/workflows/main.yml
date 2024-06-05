@@ -54,12 +54,13 @@ jobs:
       with:
         config: MyGitleaksConfigs/MyGitleaksConfig.toml
 
-    - name: save report as pipeline artifact
+    - name: Upload Gitleaks JSON report to artifacts
       uses: actions/upload-artifact@v3
+      if: failure()
       with:
-        name: gitleaks-report.json
-        path: gitleaks-report.json
-      if: ${{ always() }}
+        name: gitleaks
+        path: ${{ steps.gitleaks.outputs.report }}
+
 
   semgrep-full:
     name: Semgrep Scan
