@@ -43,11 +43,7 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
-  
-  gitleaks:
-    name: Gitleaks Scan
-    runs-on: ubuntu-latest
-    steps:
+
     - name: Code checkout
       uses: actions/checkout@v4
       
@@ -61,6 +57,7 @@ jobs:
         name: gitleaks-report.json
         path: gitleaks-report.json
       if: ${{ always() }}
+
 
   semgrep-full:
     name: Semgrep Scan
