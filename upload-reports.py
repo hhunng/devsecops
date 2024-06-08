@@ -14,6 +14,8 @@ elif file_name == 'semgrep.json':
 
 DOJO_TOKEN = os.environ.get('DOJO_TOKEN')
 
+print(DOJO_TOKEN)
+
 headers = {
     'Authorization': 'Token ' + DOJO_TOKEN
 }
