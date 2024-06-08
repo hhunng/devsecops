@@ -72,6 +72,8 @@ jobs:
       image: returntocorp/semgrep
 
     steps:
+    - name: Check var
+      run: ls -la 
     - name: Code checkout
       uses: actions/checkout@v4
     - name: full scan
