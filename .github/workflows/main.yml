@@ -20,9 +20,10 @@ jobs:
         echo "Listing direcstories in /home/runner/work/_actions"
         ls -la /home/runner/work/_actions
         ls -la /home/runner/work/_actions/warchant
-        ls -la /home/runner/work/_PipelineMapping
+        ls -la /home/runner/work/_PipelineMapping/hhunng
         ls -la /home/runner/work/_actions
-        ls -la /home/runner/work/_temp
+        ls -la /home/runner/work/
+        ls -la /home/runner/work/_temp/_github_workflow
         ls -la /home/runner/work/devsecops
         ls -la /home/runner/work/devsecops/devsecops
 
@@ -37,6 +38,7 @@ jobs:
     - name: List directories in /home/runner/work/_actions
       run: |
         echo "Listing directories in /home/runner/work/_actions"
+        ls -la /home/runner/work/_PipelineMapping/hhunng
         ls -la /home/runner/work/_actions
 
     - name: List directories in current directory
