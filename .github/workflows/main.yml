@@ -44,6 +44,11 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
 
+  windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+
   gitleaks:
     name: Gitleaks Scan
     runs-on: ubuntu-latest
