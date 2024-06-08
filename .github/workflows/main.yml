@@ -72,8 +72,6 @@ jobs:
       image: returntocorp/semgrep
 
     steps:
-    - name: Check var
-      run: pwd 
     - name: Code checkout
       uses: actions/checkout@v4
     - name: full scan
@@ -101,9 +99,17 @@ jobs:
       image: python
 
     steps:
+    - name: check var
+      run: |
+        ls
+        pwd 
     - name: Code checkout
       uses: actions/checkout@v4
 
+    - name: check var
+      run: |
+        ls
+        pwd 
     - name: Download aritfact of Segrem
       uses: actions/download-artifact@v4
       with:
