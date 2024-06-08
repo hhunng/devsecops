@@ -97,7 +97,7 @@ jobs:
         path: semgrep.json
       if: ${{ always() }}
 
-  dependency-check:
+  dependencycheck:
     name: Dependency Check
     runs-on: ubuntu-latest
     steps:
@@ -122,12 +122,12 @@ jobs:
     - name: save report as pipeline artifact
       uses: actions/upload-artifact@v4
       with:
-        name: dependency-check
+        name: dependencycheck
         path: dependency-check-report.json
       if: ${{ always() }}
 
   reports:
-    needs: [semgrep, gitleaks]
+    needs: [semgrep, gitleaks, dependencycheck]
     name: Upload reports
     runs-on: ubuntu-latest
     container:
@@ -152,7 +152,7 @@ jobs:
     - name: Download aritfact of Dependency Check OWASP
       uses: actions/download-artifact@v4
       with:
-        name: dependency-check
+        name: dependencycheck
 
     - name: Push reports
       run: |
