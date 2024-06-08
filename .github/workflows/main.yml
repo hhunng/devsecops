@@ -125,5 +125,9 @@ jobs:
     - name: Code checkout
       uses: actions/checkout@v4
     
+    - name: Check var
+      run: | 
+        ls -la
+        pwd
     - name: Run the Script
       run: ./dependecy-check.sh
