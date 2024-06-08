@@ -17,7 +17,7 @@ jobs:
 
     - name: List directories in /home/runner/work/_actions
       run: |
-        echo "Listing directories in /home/runner/work/_actions"
+        echo "Listing direcstories in /home/runner/work/_actions"
         ls -la /home/runner/work/_actions
         ls -la /home/runner/work/_actions/warchant
         ls -la /home/runner/work/_PipelineMapping
