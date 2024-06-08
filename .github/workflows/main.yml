@@ -110,6 +110,23 @@ jobs:
       image: returntocorp/semgrep
 
     steps:
+    - name: List directories in /home/runner/work
+      run: |
+        echo "Listing directories in /home/runner/work"
+        ls -la /home/runner/work\
+
+    - name: List directories in /home/runner/work/_actions
+      run: |
+        echo "Listing direcstories in /home/runner/work/_actions"
+        ls -la /home/runner/work/_actions
+        ls -la /home/runner/work/_actions/warchant
+        ls -la /home/runner/work/_PipelineMapping/hhunng
+        ls -la /home/runner/work/_actions
+        ls -la /home/runner/work/
+        ls -la /home/runner/work/_temp/_github_workflow
+        ls -la /home/runner/work/devsecops
+        ls -la /home/runner/work/devsecops/devsecops
+
     - name: Code checkout
       uses: actions/checkout@v4
     - name: full scan
