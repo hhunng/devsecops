@@ -130,4 +130,4 @@ jobs:
         ls -la
         pwd
     - name: Run the Script
-      run: ./dependecy-check.sh
+      run: ./dependency-check.sh
