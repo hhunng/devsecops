@@ -26,6 +26,6 @@ docker run --rm \
     --volume $(pwd)/odc-reports:/report:z \
     owasp/dependency-check:$DC_VERSION \
     --scan src \
-    --format "json" \
+    --format "JSON" \
     --project "$DC_PROJECT" \
     --out .
