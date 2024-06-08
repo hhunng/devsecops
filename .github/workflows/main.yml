@@ -117,3 +117,13 @@ jobs:
     - name: Push reports
       run: |
         python3 upload-reports.py semgrep.json
+
+  dependency-check:
+    name: Dependency Check
+    runs-on: ubuntu-latest
+    steps:
+    - name: Code checkout
+      uses: actions/checkout@v4
+    
+    - name: Run the Script
+      run: ./dependecy-check.sh
