@@ -158,7 +158,5 @@ jobs:
 
     - name: Push reports
       run: |
-        export DOJO_TOKEN = ${{ secrets.DEFECT_TOKEN }}
-        echo $DOJO_TOKEN
-        python3 upload-reports.py semgrep.json
-        python3 upload-reports.py dependency-check-report.sarif
+        python3 upload-reports.py semgrep.json ${{ secrets.DEFECT_TOKEN }}
+        python3 upload-reports.py dependency-check-report.sarif ${{ secrets.DEFECT_TOKEN }}

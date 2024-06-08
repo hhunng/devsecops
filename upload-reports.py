@@ -1,8 +1,8 @@
 import requests
 import sys
-import os 
 
 file_name = sys.argv[1]
+token = sys.argv[2]
 scan_type = ''
 
 if file_name == 'gitleaks.json':
@@ -12,12 +12,9 @@ elif file_name == 'dependency-check-report.sarif':
 elif file_name == 'semgrep.json':
     scan_type = 'Semgrep JSON Report'
 
-DOJO_TOKEN = os.environ.get('DOJO_TOKEN')
-
-print(DOJO_TOKEN)
 
 headers = {
-    'Authorization': 'Token ' + DOJO_TOKEN
+    'Authorization': f'Token {token}'
 }
 
 url = 'https://demo.defectdojo.org/api/v2/import-scan/'
