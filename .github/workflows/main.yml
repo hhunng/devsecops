@@ -10,41 +10,8 @@ jobs:
     name: Testing APIs
     runs-on: ubuntu-latest
     steps:
-    - name: List directories in /home/runner/work
-      run: |
-        echo "Listing directories in /home/runner/work"
-        ls -la /home/runner/work\
-
-    - name: List directories in /home/runner/work/_actions
-      run: |
-        echo "Listing direcstories in /home/runner/work/_actions"
-        ls -la /home/runner/work/_actions
-        ls -la /home/runner/work/_actions/warchant
-        ls -la /home/runner/work/_PipelineMapping/hhunng
-        ls -la /home/runner/work/_actions
-        ls -la /home/runner/work/
-        ls -la /home/runner/work/_temp/_github_workflow
-        ls -la /home/runner/work/devsecops
-        ls -la /home/runner/work/devsecops/devsecops
-
     - name: Code checkout
       uses: actions/checkout@v4
-
-    - name: List directories in /home/runner/work
-      run: |
-        echo "Listing directories in /home/runner/work"
-        ls -la /home/runner/work\
-
-    - name: List directories in /home/runner/work/_actions
-      run: |
-        echo "Listing directories in /home/runner/work/_actions"
-        ls -la /home/runner/work/_PipelineMapping/hhunng
-        ls -la /home/runner/work/_actions
-
-    - name: List directories in current directory
-      run: |
-        pwd
-        ls -la
 
     - name: Maven test
       run: mvn test
@@ -77,11 +44,6 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
 
-  windows:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-
   gitleaks:
     name: Gitleaks Scan
     runs-on: ubuntu-latest
@@ -100,7 +62,7 @@ jobs:
       if: failure()
       with:
         name: gitleaks
-        path: /artifacts/gitleaks.json
+        path: gitleaks.json
 
 
   semgrep:
@@ -110,23 +72,6 @@ jobs:
       image: returntocorp/semgrep
 
     steps:
-    - name: List directories in /home/runner/work
-      run: |
-        echo "Listing directories in /home/runner/work"
-        ls -la /home/runner/work\
-
-    - name: List directories in /home/runner/work/_actions
-      run: |
-        echo "Listing direcstories in /home/runner/work/_actions"
-        ls -la /home/runner/work/_actions
-        ls -la /home/runner/work/_actions/warchant
-        ls -la /home/runner/work/_PipelineMapping/hhunng
-        ls -la /home/runner/work/_actions
-        ls -la /home/runner/work/
-        ls -la /home/runner/work/_temp/_github_workflow
-        ls -la /home/runner/work/devsecops
-        ls -la /home/runner/work/devsecops/devsecops
-
     - name: Code checkout
       uses: actions/checkout@v4
     - name: full scan
@@ -143,7 +88,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: semgrep
-        path: /artifacts/semgrep.json
+        path: semgrep.json
       if: ${{ always() }}
 
   reports:
@@ -161,14 +106,9 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: semgrep
-        path: /artifacts/semgrep.json
 
     - name: Download aritfact of Gitleaks
       uses: actions/download-artifact@v4
       with:
         name: gitleaks
-        path: /artifacts/gitleaks.json
-
-    - name: Var the artifact
-      run: ls
 
