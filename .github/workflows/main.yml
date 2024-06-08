@@ -15,10 +15,10 @@ jobs:
         echo "Listing directories in /home/runner/work"
         ls -la /home/runner/work\
 
-    - name: List directories in /home/runner/_work/_actions
+    - name: List directories in /home/runner/work/_actions
       run: |
-        echo "Listing directories in /home/runner/_work/_actions"
-        ls -la /home/runner/_work/_actions
+        echo "Listing directories in /home/runner/work/_actions"
+        ls -la /home/runner/work/_actions
 
     - name: Code checkout
       uses: actions/checkout@v4
@@ -28,10 +28,10 @@ jobs:
         echo "Listing directories in /home/runner/work"
         ls -la /home/runner/work\
 
-    - name: List directories in /home/runner/_work/_actions
+    - name: List directories in /home/runner/work/_actions
       run: |
-        echo "Listing directories in /home/runner/_work/_actions"
-        ls -la /home/runner/_work/_actions
+        echo "Listing directories in /home/runner/work/_actions"
+        ls -la /home/runner/work/_actions
 
     - name: List directories in current directory
       run: |
