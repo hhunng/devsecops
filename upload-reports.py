@@ -6,8 +6,8 @@ scan_type = ''
 
 if file_name == 'gitleaks.json':
     scan_type = 'Gitleaks Scan'
-elif file_name == 'njsscan.sarif':
-    scan_type = 'SARIF'
+elif file_name == 'dependency-check-report.json':
+    scan_type = 'Dependency Check Scan'
 elif file_name == 'semgrep.json':
     scan_type = 'Semgrep JSON Report'
 
@@ -23,7 +23,7 @@ data = {
     'verified': True,
     'scan_type': scan_type,
     'minimum_severity': 'Low',
-    'engagement': 16
+    'engagement': 14
 }
 
 files = {
