@@ -158,5 +158,6 @@ jobs:
 
     - name: Push reports
       run: |
+        export DOJO_TOKEN=${{ secrets.DOJO_TOKEN }}
         python3 upload-reports.py semgrep.json
         python3 upload-reports.py dependency-check-report.sarif
