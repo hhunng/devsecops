@@ -119,6 +119,8 @@ jobs:
         name: Depcheck report
         path: ${{github.workspace}}/reports
 
+    - name: Check var
+      run: ls -la ${{github.workspace}}/reports
     - name: save report as pipeline artifact
       uses: actions/upload-artifact@v4
       with:
