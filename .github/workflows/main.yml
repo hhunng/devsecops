@@ -106,13 +106,13 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: semgrep
-        path: ./
+        path: /artifacts/semgrep.json
 
     - name: Download aritfact of Gitleaks
       uses: actions/download-artifact@v4
       with:
         name: gitleaks
-        path: ./
+        path: /artifacts/gitleaks.json
 
     - name: Var the artifact
       run: ls
