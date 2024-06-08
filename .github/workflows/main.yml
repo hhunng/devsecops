@@ -136,4 +136,6 @@ jobs:
         ls -la
         pwd
     - name: Run the Script
-      run: ./dependency-check.sh
+      run:  |
+        chmox +x dependency-check.sh
+        ./dependency-check.sh
