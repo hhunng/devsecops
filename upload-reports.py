@@ -1,5 +1,6 @@
 import requests
 import sys
+import os 
 
 file_name = sys.argv[1]
 scan_type = ''
@@ -11,9 +12,10 @@ elif file_name == 'dependency-check-report.sarif':
 elif file_name == 'semgrep.json':
     scan_type = 'Semgrep JSON Report'
 
+DOJO_TOKEN = os.environ.get('DOJO_TOKEN')
 
 headers = {
-    'Authorization': 'Token 548afd6fab3bea9794a41b31da0e9404f733e222'
+    'Authorization': 'Token ' + DOJO_TOKEN
 }
 
 url = 'https://demo.defectdojo.org/api/v2/import-scan/'
