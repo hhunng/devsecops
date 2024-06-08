@@ -19,6 +19,7 @@ jobs:
       run: |
         echo "Listing directories in /home/runner/work/_actions"
         ls -la /home/runner/work/_actions
+        ls -la /home/runner/work/_actions/warchant
 
     - name: Code checkout
       uses: actions/checkout@v4
