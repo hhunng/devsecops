@@ -62,7 +62,7 @@ jobs:
       if: failure()
       with:
         name: gitleaks
-        path: ${{ steps.gitleaks.outputs.report }}
+        path: gitleaks.json
 
 
   semgrep:
@@ -102,11 +102,18 @@ jobs:
     - name: Code checkout
       uses: actions/checkout@v4
 
-    - name: Run script
-      run: ls
-
     - name: Download aritfact of Segrem
       uses: actions/download-artifact@v4
       with:
         name: semgrep
+        path: ./
+
+    - name: Download aritfact of Gitleaks
+      uses: actions/download-artifact@v4
+      with:
+        name: gitleaks
+        path: ./
+
+    - name: Var the artifact
+      run: ls
 
