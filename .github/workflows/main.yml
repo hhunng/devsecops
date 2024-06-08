@@ -73,7 +73,7 @@ jobs:
 
     steps:
     - name: Check var
-      run: ls -la 
+      run: pwd 
     - name: Code checkout
       uses: actions/checkout@v4
     - name: full scan
