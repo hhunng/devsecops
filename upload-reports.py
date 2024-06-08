@@ -6,7 +6,7 @@ scan_type = ''
 
 if file_name == 'gitleaks.json':
     scan_type = 'Gitleaks Scan'
-elif file_name == 'dependency-check-report.json':
+elif file_name == 'dependency-check-report.sarif':
     scan_type = 'Dependency Check Scan'
 elif file_name == 'semgrep.json':
     scan_type = 'Semgrep JSON Report'
