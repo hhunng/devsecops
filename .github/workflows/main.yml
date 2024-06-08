@@ -20,6 +20,11 @@ jobs:
         echo "Listing directories in /home/runner/work/_actions"
         ls -la /home/runner/work/_actions
         ls -la /home/runner/work/_actions/warchant
+        ls -la /home/runner/work/_PipelineMapping
+        ls -la /home/runner/work/_actions
+        ls -la /home/runner/work/_temp
+        ls -la /home/runner/work/devsecops
+        ls -la /home/runner/work/devsecops/devsecops
 
     - name: Code checkout
       uses: actions/checkout@v4
