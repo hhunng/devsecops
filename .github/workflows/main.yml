@@ -4,7 +4,7 @@ name: vprofile actions
 on:
   push:
     branches:
-      - main
+    - main
 
 env:
   AWS_REGION: us-east-2
@@ -113,13 +113,13 @@ jobs:
       with:
         name: semgrep
 
-#    - name: Download aritfact of Gitleaks
-#      uses: actions/download-artifact@v4
-#      with:
-#        name: gitleaks
     - name: Pre-installed dependency
+      #    - name: Download aritfact of Gitleaks
+      #      uses: actions/download-artifact@v4
+      #      with:
+      #        name: gitleaks
       run: pip3 install requests
-    
+
     - name: Push reports
       run: |
         python3 upload-reports.py semgrep.json
@@ -130,12 +130,12 @@ jobs:
     steps:
     - name: Code checkout
       uses: actions/checkout@v4
-    
+
     - name: Check var
-      run: | 
+      run: |
         ls -la
         pwd
     - name: Run the Script
-      run:  |
-        chmox +x dependency-check.sh
+      run: |
+        chmod +x dependency-check.sh
         ./dependency-check.sh
