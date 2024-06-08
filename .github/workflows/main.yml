@@ -105,10 +105,13 @@ jobs:
     - name: Download aritfact of Segrem
       uses: actions/download-artifact@v4
       with:
-        name: semgrep.json
+        name: semgrep
 
     - name: Download aritfact of Gitleaks
       uses: actions/download-artifact@v4
       with:
-        name: gitleaks.json
+        name: gitleaks
+
+    - name: Check Artifact
+      run: ls -la
 
