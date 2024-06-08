@@ -156,8 +156,13 @@ jobs:
       with:
         name: dependencycheck
 
+    - name: Set DOJO_TOKEN environment variable
+      env:
+        DOJO_TOKEN: ${{ secrets.DOJO_TOKEN }}
+      run: |
+        echo "DOJO_TOKEN=$DOJO_TOKEN" >> $GITHUB_OUTPUT
+        
     - name: Push reports
       run: |
-        export DOJO_TOKEN=${{ secrets.DOJO_TOKEN }}
         python3 upload-reports.py semgrep.json
         python3 upload-reports.py dependency-check-report.sarif
