@@ -62,7 +62,7 @@ jobs:
       if: failure()
       with:
         name: gitleaks
-        path: gitleaks.json
+        path: /artifacts/gitleaks.json
 
 
   semgrep:
@@ -88,11 +88,11 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: semgrep
-        path: semgrep.json
+        path: /artifacts/semgrep.json
       if: ${{ always() }}
 
   reports:
-    needs: [semgrep, gitleaks, Testing]
+    needs: [semgrep, gitleaks]
     name: Upload reports
     runs-on: ubuntu-latest
     container:
