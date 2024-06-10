@@ -198,10 +198,40 @@ jobs:
       uses: aquasecurity/trivy-action@0.20.0
       with:
         image-ref: docker.io/my-organization/my-app:${{ github.sha }}
-        format: 'table'
-        exit-code: '1'
+        format: 'sarif'
+        output: 'trivy.sarif'
+        #exit-code: '1'
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
+
+    - name: Upload trivy artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: trivy
+        path: trivy.sarif
+      if: ${{ always() }}   
+
+  report-image:
+    needs: registry
+    name: Upload Trivy Scanning Report
+    runs-on: ubuntu-latest
+    container:
+      image: python
+
+    steps:
+    - name: Code checkout
+      uses: actions/checkout@v4
+
+    - name: Download aritfact of Trivy
+      id: gitleaks
+      uses: actions/download-artifact@v4
+      with:
+        name: trivy
+      continue-on-error: true
+
+    - name: Push reports
+      run: |
+        python3 upload-reports.py trivy.sarif ${{ secrets.DEFECT_TOKEN }}
 
     

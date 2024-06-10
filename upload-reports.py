@@ -1,7 +1,7 @@
 import requests
 import sys
 
-#######
+##########
 
 file_name = sys.argv[1]
 token = sys.argv[2]
@@ -9,7 +9,7 @@ scan_type = ''
 
 if file_name == 'gitleaks.json':
     scan_type = 'Gitleaks Scan'
-elif file_name == 'dependency-check-report.sarif':
+elif file_name == 'dependency-check-report.sarif' or file_name == 'trivy.sarif':
     scan_type = 'SARIF'
 elif file_name == 'semgrep.json':
     scan_type = 'Semgrep JSON Report'
