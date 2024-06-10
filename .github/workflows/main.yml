@@ -51,6 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: zricethezav/gitleaks
+
     steps:
     - name: Code checkout
       uses: actions/checkout@v4
@@ -87,6 +88,13 @@ jobs:
     - name: full scan json
       run: semgrep scan --lang java --json-output=semgrep.json
 
+    - name: save report as pipeline artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: semgrep
+        path: semgrep.json
+      if: ${{ always() }}
+
   dependencycheck:
     name: Dependency Check
     runs-on: ubuntu-latest
@@ -103,15 +111,6 @@ jobs:
         out: 'reports'
         args: >
           --failOnCVSS 7 --enableRetired
-    - name: save report as pipeline artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: dependencycheck
-        path: ${{github.workspace}}/reports/dependency-check-report.sarif
-      if: ${{ always() }}
-
-    - name: Check var
-      run: ls -la ${{github.workspace}}/reports
     - name: save report as pipeline artifact
       uses: actions/upload-artifact@v4
       with:
@@ -204,3 +203,5 @@ jobs:
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
+
+    
