@@ -1,15 +1,16 @@
-name: vprofile actions
-#on: workflow_dispatch
-
+name: DevSecOps Pipeline
 on:
   push:
     branches:
-    - main
+    - staging
 
 env:
-  AWS_REGION: us-east-2
-  ECR_REPOSITORY: vprofileapp
-  EKS_CLUSTER: vprofile-eks
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  ECR_REPOSITORY: evangelion-registry
+  EKS_CLUSTER: karpenter-eks
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
 jobs:
   Testing:
@@ -25,26 +26,21 @@ jobs:
     - name: Checkstyle
       run: mvn checkstyle:checkstyle
 
-    # Setup java 11 to be default (sonar-scanner requirement as of 5.x)
     - name: Set Java 11
       uses: actions/setup-java@v3
       with:
-        distribution: 'temurin' # See 'Supported distributions' for available options
+        distribution: 'temurin'
         java-version: '11'
 
-    # Setup sonar-scanner
     - name: Setup SonarQube
       uses: warchant/setup-sonar-scanner@v7
 
-    # Run sonar-scanner
     - name: SonarQube Scan
       run: sonar-scanner -Dsonar.host.url=${{ secrets.SONAR_URL }} -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} -Dsonar.sources=src/ -Dsonar.junit.reportsPath=target/surefire-reports/ -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/
 
-    # Check the Quality Gate status.
     - name: SonarQube Quality Gate check
       id: sonarqube-quality-gate-check
       uses: sonarsource/sonarqube-quality-gate-action@master
-      # Force to fail step after specific time.
       timeout-minutes: 5
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -53,23 +49,24 @@ jobs:
   gitleaks:
     name: Gitleaks Scan
     runs-on: ubuntu-latest
+    container:
+      image: zricethezav/gitleaks
     steps:
     - name: Code checkout
       uses: actions/checkout@v4
 
     - name: Run Gitleaks
       id: gitleaks
-      uses: DariuszPorowski/github-action-gitleaks@v2
-      with:
-        config: MyGitleaksConfigs/MyGitleaksConfig.toml
+      run: |
+        git config --global --add safe.directory '*'
+        gitleaks detect --source . -v
 
     - name: Upload Gitleaks JSON report to artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: failure()
       with:
         name: gitleaks
         path: gitleaks.json
-
 
   semgrep:
     name: Semgrep Scan
@@ -90,13 +87,6 @@ jobs:
     - name: full scan json
       run: semgrep scan --lang java --json-output=semgrep.json
 
-    - name: save report as pipeline artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: semgrep
-        path: semgrep.json
-      if: ${{ always() }}
-
   dependencycheck:
     name: Dependency Check
     runs-on: ubuntu-latest
@@ -113,11 +103,12 @@ jobs:
         out: 'reports'
         args: >
           --failOnCVSS 7 --enableRetired
-    - name: Upload Test results
-      uses: actions/upload-artifact@master
+    - name: save report as pipeline artifact
+      uses: actions/upload-artifact@v4
       with:
-        name: Depcheck report
-        path: ${{github.workspace}}/reports
+        name: dependencycheck
+        path: ${{github.workspace}}/reports/dependency-check-report.sarif
+      if: ${{ always() }}
 
     - name: Check var
       run: ls -la ${{github.workspace}}/reports
@@ -139,6 +130,13 @@ jobs:
     - name: Code checkout
       uses: actions/checkout@v4
 
+    - name: Download aritfact of Gitleaks
+      id: gitleaks
+      uses: actions/download-artifact@v4
+      with:
+        name: gitleaks
+      continue-on-error: true
+
     - name: Download aritfact of Segrem
       uses: actions/download-artifact@v4
       with:
@@ -156,7 +154,53 @@ jobs:
       with:
         name: dependencycheck
 
+    - name: Push gitleaks report
+      if: steps.gitleaks.outcome == 'success'
+      run: |
+        python3 upload-reports.py gitleaks.json ${{ secrets.DEFECT_TOKEN }}
+
     - name: Push reports
       run: |
         python3 upload-reports.py semgrep.json ${{ secrets.DEFECT_TOKEN }}
         python3 upload-reports.py dependency-check-report.sarif ${{ secrets.DEFECT_TOKEN }}
+
+  registry:
+    needs: reports
+    name: Push Image to ECR
+    runs-on: ubuntu-latest
+    steps:
+    - name: Code checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-pf-aws-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build and push the tagged docker image to Amazon ECR
+      id : containerImage
+      env:
+        AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
+        AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
+      run: |
+        docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/evangelion-registry:${{ github.run_number }} -t docker.io/my-organization/my-app:${{ github.sha }} .
+        docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/evangelion-registry:${{ github.run_number }}
+
+    - name: Run Trivy vulnerability scanner
+      env:
+        AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
+        AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
+      uses: aquasecurity/trivy-action@0.20.0
+      with:
+        image-ref: docker.io/my-organization/my-app:${{ github.sha }}
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
