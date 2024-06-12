@@ -188,8 +188,10 @@ jobs:
         AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
         AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
       run: |
-        docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/evangelion-registry:${{ github.run_number }} -t docker.io/my-organization/my-app:${{ github.sha }} .
+        docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/evangelion-registry:${{ github.run_number }} -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/evangelion-registry:latest .
         docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/evangelion-registry:${{ github.run_number }}
+        docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/evangelion-registry:latest
+
 
     - name: Run Trivy vulnerability scanner
       env:
@@ -236,26 +238,3 @@ jobs:
     - name: Push reports
       run: |
         python3 upload-reports.py trivy.sarif ${{ secrets.DEFECT_TOKEN }}
-  
-  DeployToEKS: 
-    needs: report-image 
-    runs-on: ubuntu-latest 
-    steps: 
-      - name: Code checkout 
-        uses: actions/checkout@v4 
- 
-      - name: Configure AWS credentials 
-        uses: aws-actions/configure-aws-credentials@v1 
-        with: 
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY  }} 
-          aws-region: ${{ env.AWS_DEFAULT_REGION }} 
- 
-      - name: Get Kube config file 
-        run: aws eks update-kubeconfig --region ${{ env.AWS_DEFAULT_REGION  }} --name ${{ env.EKS_CLUSTER }} 
- 
-      - name: Print config file 
-        run: cat ~/.kube/config 
- 
-      - name: Login to ECR 
-        run: kubectl create secret docker-registry regcred --docker-server=$ {{ secrets.REGISTRY  }} --docker-username=AWS  --docker-password=$(aws ecr get-login-password)  
