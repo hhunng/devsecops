@@ -199,7 +199,7 @@ jobs:
         AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
       uses: aquasecurity/trivy-action@0.20.0
       with:
-        image-ref: docker.io/my-organization/my-app:${{ github.sha }}
+        image-ref: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/evangelion-registry:latest
         format: 'sarif'
         output: 'trivy.sarif'
         #exit-code: '1'
