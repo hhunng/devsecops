@@ -285,5 +285,5 @@ jobs:
         cluster-name: ${{ env.EKS_CLUSTER }}
         chart-path: helm/devsecopscharts
         namespace: default
-        values: appimage=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/evangelion-registry,apptag=${{ github.run_number }}
+        values: appimage=991289554378.dkr.ecr.us-east-1.amazonaws.com/evangelion-registry,apptag=latest
         name: devsecopspipeline
