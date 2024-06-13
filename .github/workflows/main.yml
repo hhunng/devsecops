@@ -259,6 +259,17 @@ jobs:
     - name: Print config file
       run: cat ~/.kube/config
 
+    - name: Create regcred secret if it does not exist
+      if: steps.regcred_check.outputs.exit-code != '0'
+      env:
+        AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
+        AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
+      run: |
+        kubectl create secret docker-registry regcred \
+        --docker-server=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com \
+        --docker-username=AWS \
+        --docker-password=$(aws ecr get-login-password)
+
     - name: Login to ECR
       env:
         AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
@@ -270,7 +281,6 @@ jobs:
       env:
         AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
         AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
-
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
