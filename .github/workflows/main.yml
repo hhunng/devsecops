@@ -290,6 +290,7 @@ jobs:
         name: devsecopspipeline
 
   zap_scan:
+    needs: DeployToEKS
     runs-on: ubuntu-latest
     name: Scan the webapplication
     steps:
