@@ -259,8 +259,11 @@ jobs:
     - name: Print config file
       run: cat ~/.kube/config
 
-    - name: Create regcred secret if it does not exist
-      if: steps.regcred_check.outputs.exit-code != '0'
+    - name: Delete existing regcred secret if it exists
+      run: |
+        kubectl delete secret regcred || echo "Secret does not exist"
+
+    - name: Create regcred secret
       env:
         AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
         AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
@@ -288,5 +291,5 @@ jobs:
         cluster-name: ${{ env.EKS_CLUSTER }}
         chart-path: helm/devsecopscharts
         namespace: default
-        values: appimage=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/evangelion-registry, apptag=${{ github.run_number }}
+        values: appimage=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/evangelion-registry,apptag=${{github.run_number}}
         name: devsecopspipeline
